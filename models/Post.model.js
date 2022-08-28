@@ -15,16 +15,16 @@ const houseSchema = new mongoose.Schema({
     type: String,
     require: true,
   },
-  // comments: [
-  //   {
-  //     text: String,
-  //     postedBy: { types: ObjectId, ref: 'users' },
-  //   },
-  // ],
-  // postedBy: {
-  //   types: ObjectId,
-  //   ref: 'users',
-  // },
+  comments: [
+    {
+      text: String,
+      postedBy: { type: ObjectId, ref: 'user' },
+    },
+  ],
+  postedBy: {
+    type: ObjectId,
+    ref: 'user',
+  },
   photo: {
     type: String,
     require: true,
