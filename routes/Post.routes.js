@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const { house } = require('../models/Post.model');
+const requireLogin = require('../Middleware/requiredLogin.middleware');
 
 router.get('/allpost', (req, res) => {
   house
@@ -32,6 +33,31 @@ router.post('/', async (req, res) => {
     })
     .catch((err) => {
       console.log(err);
+    });
+});
+
+router.put('/comment', requireLogin, async (req, res) => {
+  const comment = {
+    text: req.body.text,
+    postedBy: req.User._id,
+  };
+  house
+    .findByIdAndUpdate(
+      req.body.postId,
+      {
+        $push: { comments: comment },
+      },
+      {
+        new: true,
+      },
+    )
+    .populate('comments.postedBy', '_id name')
+    .exec((err, result) => {
+      if (err) {
+        return res.status(422).json({ error: err });
+      } else {
+        res.json(result);
+      }
     });
 });
 module.exports = router;
